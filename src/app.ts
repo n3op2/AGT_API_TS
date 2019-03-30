@@ -1,19 +1,27 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import * as http from 'http';
+import config from 'config';
+import bodyParser from 'body-parser';
+import { Auth } from './lib/auth';
 
-class App {
-  public app: express.Application;
+const PORT = config.get('server.port');
+const auth = new Auth();
+const app = express();
+app.set('Access-Control-Allow-Origin', '*');
+app.use(bodyParser.json());
 
-  constructor() {
-    this.app = express();
-    this.config();
-    this.routes();
-  }
-  public config() {};
-  public routes() {
-    this.app.get('/', (req: Request, res: Response) => {
-    });
-  }
-}
+console.log(auth.generateToken({}));
+/*
+const generate = async () => {
+};
+*/
+
+const server = http.createServer(app);
+
+server.listen(PORT, () => {
+  console.log('Server has starter...');
+});
+
+
 
