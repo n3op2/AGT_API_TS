@@ -11,7 +11,13 @@ const app = express();
 app.set('Access-Control-Allow-Origin', '*');
 app.use(bodyParser.json());
 
-console.log(auth.generateToken({}));
+auth.generateToken({}, (err, token) => {
+  console.log(token)
+});
+
+app.get('/', (req: Request, res: Response) => {
+
+});
 /*
 const generate = async () => {
 };
