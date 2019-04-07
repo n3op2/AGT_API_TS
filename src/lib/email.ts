@@ -31,6 +31,10 @@ const Send: _send =
   });
 }
 
+export interface MailTypes {
+  sendBody: _sendBody;
+}
+
 export default class Mail {
   private from: string;
   constructor() {
@@ -38,6 +42,7 @@ export default class Mail {
   }
 
   public send = async function send(to: string, body: _sendBody, cb: _boolCb) {
+    console.log('send body -> ', body);
     await Send(to, body).then(sendRes => { 
       if (!sendRes) return cb(sendRes);
       cb(sendRes);

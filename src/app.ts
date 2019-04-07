@@ -3,12 +3,35 @@ import * as http from 'http';
 import config from 'config';
 import bodyParser from 'body-parser';
 import { Auth } from './lib/auth';
-import Mail from './lib/email';
+import Mail, { MailTypes } from './lib/email';
 
 const m = new Mail();
-m.send('asddasdl.asdom', { title: '', vars: [] }, (res: boolean) => {
-  console.log(res ? 'success' : 'error'); 
-});
+
+// Controller prop definitions
+type _c = {
+  postFeedback: (to: string, req: MailTypes["sendBody"]) => void;
+  getSmtp: () => string;
+};
+
+// Constroller
+const c: _c = {
+  getSmtp: function(): string {
+    return `SMTP SERVER [${config.get('smtp.host')}]`;
+  },
+
+  postFeedback: function(to: string, req: { title: string, vars: string[]}) {
+    const body = {
+      title: req.title,
+      vars: req.vars
+    }
+    m.send(to, body, (mRes: boolean) => {
+      return mRes;
+    });
+  }
+}
+
+c.postFeedback('ycom', { title: 'hi', vars: ['a', 'b', 'c'] });
+console.log(c.getSmtp());
 
 const PORT = config.get('server.port');
 const auth = new Auth();
