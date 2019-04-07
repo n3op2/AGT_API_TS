@@ -10,7 +10,7 @@ const m = new mail.Mail();
 // Controller prop definitions
 type _sendBody = mail.MailTypes['sendBody'];
 type _c = {
-postFeedback: (to: string, req: _sendBody, cb: (res: boolean) => void) => void;
+  postFeedback: (to: string, req: _sendBody, cb: (res: boolean) => void) => void;
   getSmtp: () => string;
 };
 
@@ -21,9 +21,7 @@ const c: _c = {
   },
 
   postFeedback: function(to: string, req: _sendBody, cb: (res: boolean) => void) {
-    m.send(to, req, (mRes: boolean) => {
-      return cb(mRes);
-    });
+    m.send(to, req, (mRes) => cb(mRes));
   }
 }
 
