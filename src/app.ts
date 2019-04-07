@@ -3,13 +3,14 @@ import * as http from 'http';
 import config from 'config';
 import bodyParser from 'body-parser';
 import { Auth } from './lib/auth';
-import Mail, { MailTypes } from './lib/email';
+import * as mail from './lib/email';
 
-const m = new Mail();
+const m = new mail.Mail();
 
 // Controller prop definitions
+type _sendBody = mail.MailTypes['sendBody'];
 type _c = {
-  postFeedback: (to: string, req: MailTypes["sendBody"]) => void;
+postFeedback: (to: string, req: _sendBody, cb: (res: boolean) => void) => void;
   getSmtp: () => string;
 };
 
@@ -19,18 +20,14 @@ const c: _c = {
     return `SMTP SERVER [${config.get('smtp.host')}]`;
   },
 
-  postFeedback: function(to: string, req: { title: string, vars: string[]}) {
-    const body = {
-      title: req.title,
-      vars: req.vars
-    }
-    m.send(to, body, (mRes: boolean) => {
-      return mRes;
+  postFeedback: function(to: string, req: _sendBody, cb: (res: boolean) => void) {
+    m.send(to, req, (mRes: boolean) => {
+      return cb(mRes);
     });
   }
 }
 
-c.postFeedback('ycom', { title: 'hi', vars: ['a', 'b', 'c'] });
+c.postFeedback('ycom', { title: 'hi', vars: ['a', 'b', 'c'] }, (r) => console.log(r));
 console.log(c.getSmtp());
 
 const PORT = config.get('server.port');

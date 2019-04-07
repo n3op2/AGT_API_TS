@@ -35,7 +35,7 @@ export interface MailTypes {
   sendBody: _sendBody;
 }
 
-export default class Mail {
+export class Mail {
   private from: string;
   constructor() {
     this.from = 'from@from.com';
