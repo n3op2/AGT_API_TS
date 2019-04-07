@@ -10,13 +10,15 @@ type _sendBody = {
   footer?: string
 }
 type _boolCb = (b: boolean) => void; 
+type _send = (to: string, body: _sendBody) => Promise<boolean>;
 
 const cutErr = function(e: object): string {
   const s: string = '...';
   return JSON.stringify(e).slice(0, 15) + s;
 }
 
-const Send = function(to: string, body: _sendBody): Promise<boolean> {
+const Send: _send =
+  function(to: string, body: _sendBody): Promise<boolean> {
   return new Promise<boolean>(resolve => {
     t.sendMail({to: to, subject: to, html: body.title}, (err, res) => {
       if (err) {
